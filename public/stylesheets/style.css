@@ -1,8 +1,15 @@
-body {
+/* body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+} */
+
+#main_map { height: 600px; }
+
+.projects-section {
+  padding: 3rem 0;
+  background: #333333 !important;
 }
