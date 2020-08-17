@@ -4,7 +4,7 @@ const bicicletaAPIController = require('../../controllers/api/bicicletaControlle
 
 router.get('/', bicicletaAPIController.index);
 router.post('/create', bicicletaAPIController.create);
-router.put('/:id/update', bicicletaAPIController.update);
+router.put('/update', bicicletaAPIController.update);
 router.delete('/delete', bicicletaAPIController.delete);
 
 module.exports = router

@@ -16,7 +16,7 @@ const bicicletaController = {
     },
 
     update: (req, res) => {
-        let bici = Bicicleta.findById(req.params.id)
+        let bici = Bicicleta.findById(req.body.id)
         bici.id = req.body.id;
         bici.color = req.body.color;
         bici.modelo = req.body.modelo;
