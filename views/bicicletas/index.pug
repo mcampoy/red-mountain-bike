@@ -2,7 +2,11 @@ extends ../layout
 
 block content
 
- 
+ div.container
+    br
+    a(href='/') Home
+    br
+    br
     a(href='/bicicletas/create') Nueva bicicleta
     br
     br
@@ -34,4 +38,4 @@ block content
                   button.link-button(type='submit' name='submit_param' value='submit_value' class='btn')
                     = 'Eliminar'
               td
-                 a(href='bicicletas/' + bici.id) Ver detalles
+                 a(href='bicicletas/' + bici.id + '/showDetails') Ver detalles
