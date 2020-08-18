@@ -19,7 +19,7 @@ Bicicleta.findById = (aBiciId) => {
     if(aBici)
         return aBici
     else
-        throw new Error(`No existe una bicicleta con el el id ${aBiciId}`)
+        throw new Error(`No existe una bicicleta con el id ${aBiciId}`)
 }
 
 Bicicleta.removeById = (aBiciId) => {
@@ -34,7 +34,7 @@ Bicicleta.removeById = (aBiciId) => {
 let a = new Bicicleta(1, 'rojo', 'mountain bike', [-32.9655714,-68.8912686]);
 let b = new Bicicleta(2, 'negro', 'mountain bike', [-32.9722849,-68.8825144]);
 
-Bicicleta.add(a)
-Bicicleta.add(b)
+// Bicicleta.add(a)
+// Bicicleta.add(b)
 
 module.exports = Bicicleta

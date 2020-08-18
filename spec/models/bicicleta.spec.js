@@ -1,4 +1,4 @@
-const Bicicleta = require('../../bd/models/Bicicleta')
+const Bicicleta = require('../../bd/models/Bicicleta');
 
 // Antes de cada testeo la coleeción Bicicleta vale 0
 beforeEach(() => {
@@ -34,8 +34,8 @@ describe('Bicicleta.findById', () => {
         let a = new Bicicleta(1, 'rojo', 'mountain bike', [-32.9655714,-68.8912686]);
         let b = new Bicicleta(2, 'negro', 'urbana', [-32.9722849,-68.8825144]);
 
-        Bicicleta.add(a)
-        Bicicleta.add(b)
+        Bicicleta.add(a);
+        Bicicleta.add(b);
 
         let targetBici = Bicicleta.findById(1)
         expect(targetBici.id).toBe(1)
