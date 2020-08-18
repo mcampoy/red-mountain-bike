@@ -1,7 +1,10 @@
 const Bicicleta = require('../../database/models/Bicicleta');
 const request = require('request');
-let server = require('../../bin/www');
+// let server = require('../../bin/www');
 
+beforeEach(() => {
+    console.log('testeando...')
+});
 describe('Bicicleta API', () => {
     // anidamos los describe
     describe('GET bicicletas /', () => {

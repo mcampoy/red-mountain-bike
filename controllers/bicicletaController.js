@@ -17,6 +17,7 @@ const bicicletaController ={
     create: (req, res) => {
         let bici = new Bicicleta(req.body.id, req.body.color, req.body.modelo)
         bici.ubicacion = [req.body.lat, req.body.lng];
+
         Bicicleta.add(bici);
 
         res.redirect('/bicicletas')
