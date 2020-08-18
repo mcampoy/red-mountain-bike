@@ -1,4 +1,4 @@
-const Bicicleta = require('../../bd/models/Bicicleta');
+const Bicicleta = require('../../database/models/Bicicleta');
 const request = require('request');
 let server = require('../../bin/www');
 

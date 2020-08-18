@@ -1,4 +1,4 @@
-const Bicicleta = require('../../bd/models/Bicicleta');
+const Bicicleta = require('../../database/models/Bicicleta');
 
 // Antes de cada testeo la coleeción Bicicleta vale 0
 beforeEach(() => {

@@ -1,4 +1,4 @@
-const Bicicleta = require('../bd/models/Bicicleta');
+const Bicicleta = require('../database/models/Bicicleta');
 
 const bicicletaController ={
     index: (req, res) => {

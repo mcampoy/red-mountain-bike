@@ -15,7 +15,7 @@ $.ajax({
         console.log(result);
         result.bicicletas.forEach(bici => {
             L.marker(bici.ubicacion).addTo(map)
-            .bindPopup(`Bicleta n° ${bici.id}`)
+            .bindPopup(`Bicicleta n° ${bici.id}`)
             .openPopup();
         });
     }
