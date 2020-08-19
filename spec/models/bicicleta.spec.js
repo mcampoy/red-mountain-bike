@@ -3,10 +3,9 @@ let Bicicleta = require('../../database/models/Bicicleta');
 
 describe('Testing Bicicletas', function() {
     beforeEach(function(done) {
-        let mongoDB = 'mongodb://127.0.0.1/testdb';
-        mongoose.connect(mongoDB, { useUnifiedTopology: true, useNewUrlParser: true })
-        .then
-
+        let mongoDB = 'mongodb://localhost/testdb';
+        mongoose.connect(mongoDB, { useNewUrlParser: true })
+        
         const db = mongoose.connection;
         db.on('error', console.error.bind(console, 'MongoDBTest connection error'));
         db.once('open', function() {
@@ -14,7 +13,7 @@ describe('Testing Bicicletas', function() {
             done();
         });
     });
-    
+
     afterEach(function(done) {
         Bicicleta.deleteMany({}, function(err, success) {
             if(err) console.log(err);
@@ -78,9 +77,6 @@ describe('Testing Bicicletas', function() {
         })
         });
 });
-
-
-
 
 
 // // Antes de cada testeo la coleeción Bicicleta vale 0

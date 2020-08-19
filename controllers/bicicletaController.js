@@ -1,10 +1,10 @@
-const Bicicleta = require('../database/models/Bicicleta');
+const Bicicleta = require('../database/Bici');
 
 const bicicletaController ={
     index: (req, res) => {
         res.render('bicicletas/index', { bicis: Bicicleta.allBicis })
     },
-    
+
     showDetails: (req, res) => {
         let bici = Bicicleta.findById(req.params.id)
         res.render('bicicletas/show', { bici })

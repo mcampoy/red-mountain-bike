@@ -10,7 +10,7 @@ L.marker([-32.985276,-68.8805794]).addTo(map)
 
 $.ajax({
     dataTypes: "json",
-    url: 'api/bicicletas',
+    url: 'api/bicicletas/map',
     success: (result) => {
         console.log(result);
         result.bicicletas.forEach(bici => {

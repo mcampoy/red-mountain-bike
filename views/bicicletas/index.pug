@@ -27,14 +27,14 @@ block content
               td= bici.modelo
               td= bici.ubicacion
               td
-                a(href='bicicletas/' + bici.id + '/update' style="padding: 9%" class='btn btn-dark') Editar
+                a(href='/bicicletas/' + bici.id + '/update' style="padding: 9%" class='btn btn-dark') Editar
               td
                 form.inline(method='post' action=`/bicicletas/${bici.id}/delete`)
                   input(type='hidden' name='id' value= bici.id)
                   button.link-button(type='submit' name='submit_param' style="padding: 6%" value='submit_value' class='btn btn-danger')
                     = 'Eliminar'
               td
-                 a(href='bicicletas/' + bici.id + '/showDetails' style="padding: 5%" class='btn btn-info') Ver detalles
+                 a(href='/bicicletas/' + bici.id + '/showDetails' style="padding: 5%" class='btn btn-info') Ver detalles
 
             br
     br
