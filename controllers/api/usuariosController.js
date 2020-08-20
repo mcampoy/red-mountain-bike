@@ -22,8 +22,8 @@ const usuarioController = {
         Usuario.findById(req.body.id, function(err, usuario){
             console.log(usuario);
             usuario.reservar(req.body.bici_id, req.body.desde, req.body.hasta, function(err){
-                console.log('Reservada!!');
-                res.status(200).send({ok: true});
+            let confirmation = `${usuario.nombre} ha reservado la bicicleta ${req.body.bici_id} desde el ${req.body.desde} hasta el ${req.body.hasta}`;
+                res.status(200).send({ok: true, confirmation});
             });
         });
     }

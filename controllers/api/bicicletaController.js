@@ -5,47 +5,47 @@ const bicicletaController = {
 
     index: function (req, res){
         Bicicleta.find({}, function(err, bicicletas){
-            res.status(200).json({bicicletas: bicicletas})
+            res.status(200).json({'Cantidad de bicicletas': bicicletas.length, bicicletas: bicicletas})
         })
     },
 
     create: (req, res) => {
+
         let ubicacion = [req.body.lat, req.body.lng];
-        let bicicleta = {color: req.body.color, modelo: req.body.modelo, ubicacion};
+        let bicicleta = new Bicicleta({code: req.body.code, color: req.body.color, modelo: req.body.modelo, ubicacion: ubicacion});
+        bicicleta.save(function(err){
+            res.status(200).json({bicicleta})
+        });
 
-        Bicicleta.createInstance(bicicleta)
-
-                  res.status(200).json( {bicicleta} )
       },
-    // index: (req, res) => {
-    //      res.status(200).json({
-    //          bicicletas: Bicicleta.allBicis
-    //         })
-    // },
 
-    // create: (req, res) => {
-    //     let bicicleta = new Bicicleta(req.body.id, req.body.color, req.body.modelo)
-    //     bicicleta.ubicacion = [req.body.lat, req.body.lng];
-    //     Bicicleta.add(bicicleta);
+    delete: (req, res) => {
+         Bicicleta.findByCode(req.body.code, function(err, bici){
+            if(bici){
+            Bicicleta.removeByCode(req.body.code, function(err, bicicleta){
+                let mensaje = `Se elmiminó correctamente la bicicleta con el código: ${req.body.code}`
+                 res.status(200).json({'ok':true, mensaje})
+            })
+            } else {
+                let fail = `No existe una bicicleta con el código: ${req.body.code}`
+                res.status(400).json({'ok': false, fail})
+            }
+        })
+    },
 
-    //     res.status(200).json({ bicicleta})
-    // },
+    update: (req, res) => {
+        Bicicleta.findByCode(req.body.code, function(err, bici){
 
-    // update: (req, res) => {
-    //     let bici = Bicicleta.findById(req.body.id)
-    //     bici.id = req.body.id;
-    //     bici.color = req.body.color;
-    //     bici.modelo = req.body.modelo;
-    //     bici.ubicacion = [req.body.lat, req.body.lng];
+               bici.code = req.body.code;
+               bici.color = req.body.color;
+               bici.modelo = req.body.modelo;
 
-    //     res.status(200).json( { bicileta: bici } )
-    // },
+             bici.save(function(err){
+                res.status(200).json( { bicileta: bici } )
+            })
+        })
+    },
 
-    // delete: (req, res) => {
-    //     Bicicleta.removeById(req.body.id);
-        
-    //     res.status(204).json()
-    // }
     map: (req, res) => {
         res.status(200).json({ bicicletas: BiciMap.allBicis })
     }
