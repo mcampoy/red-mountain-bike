@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Bicicleta = require('../../database/models/Bicicleta');
 const request = require('request');
-let server = require('../../bin/www');
+const server = require('../../bin/www');
 
 let urlBase = 'http://localhost:3000/api/bicicletas';
 
@@ -71,8 +71,8 @@ describe('Testing API Bicicletas', function() {
                 Bicicleta.findOne({code: bici.code}).exec((err, bicicleta) => {
                     if (err) console.log(err);
 
-                    var headers = {'content-type' : 'application/json'};
-                    var abiciUpdate = '{ "code":1, "color":"azul","modelo":"urbana","lat": -32.975832,"lng": -98.808815 }';   
+                    let headers = {'content-type' : 'application/json'};
+                    let abiciUpdate = '{ "code":1, "color":"azul","modelo":"urbana","lat": -32.975832,"lng": -98.808815 }';   
 
                     request.put({
                         headers : headers,
@@ -84,7 +84,7 @@ describe('Testing API Bicicletas', function() {
                         Bicicleta.findByCode(1, ( err, bicicleta) => {
                             if ( err) console.log(err);
 
-                            console.log( 'Bicicleta actualizada:' + bicicleta);
+                            // console.log( 'Bicicleta actualizada:' + bicicleta);
 
                             expect(bicicleta.code).toBe(1);
                             expect(bicicleta.color).toBe('azul');
@@ -109,7 +109,7 @@ describe('Testing API Bicicletas', function() {
                 Bicicleta.findOne({code: bici.code}).exec((err, bicicleta) => {
                     if (err) console.log(err);
 
-                    console.log(bicicleta);
+                    // console.log(bicicleta);
 
                     let headers = {'content-type': 'application/json'};
 
@@ -120,7 +120,7 @@ describe('Testing API Bicicletas', function() {
                     }, function(err, response, body) {
                         expect(response.statusCode).toBe(200);
                         let mensaje = JSON.parse(body)
-                        console.log(mensaje.mensaje)
+                        // console.log(mensaje.mensaje)
 
                         Bicicleta.allBicis(function (err, newBicis) {
                             expect(newBicis.length).toBe(0);

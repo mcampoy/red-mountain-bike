@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Usuario = require('../../database/models/Usuario');
 const request = require('request');
-let server = require('../../bin/www');
+const server = require('../../bin/www');
 
 let urlBase = 'http://localhost:3000/api/usuarios';
 
@@ -26,33 +26,33 @@ describe('Testing API Usuarios', function() {
         });
     });
 
-        describe('GET usuarios /', () => {
-            it('Status 200', (done) => {
-                request.get(urlBase, function(error, response, body) {
-                    let result = JSON.parse(body);
-                    expect(response.statusCode).toBe(200);
-                    expect(result.usuarios.length).toBe(0);
-                    done();
-                    });
+    describe('GET usuarios /', () => {
+        it('Status 200', (done) => {
+            request.get(urlBase, function(error, response, body) {
+                let result = JSON.parse(body);
+                expect(response.statusCode).toBe(200);
+                expect(result.usuarios.length).toBe(0);
+                done();
                 });
             });
         });
-    
-        describe('POST usuarios /create', () => {
-            it('Status 200', (done) => {
-                let headers = {'content-type' : 'application/json'};
-                let aUser = `{"nombre": "Marta"}`;
-                request.post({
-                    headers: headers,
-                    url: urlBase + '/create',
-                    body: aUser
-                }, function(error, response, body) {
-                    expect(response.statusCode).toBe(200);
-                    let user = JSON.parse(body);
-                    if(error) console.log(error)
-                    console.log(user);
-                    expect(user.nombre).toBe('Marta');
-                    done();
-                });
+
+    describe('POST usuarios /create', () => {
+        it('Status 200', (done) => {
+            let headers = {'content-type' : 'application/json'};
+            let aUser = `{"nombre": "Marta"}`;
+            request.post({
+                headers: headers,
+                url: urlBase + '/create',
+                body: aUser
+            }, function(err, response, body) {
+                expect(response.statusCode).toBe(200);
+                let user = JSON.parse(body);
+                if(err) console.log(err)
+                // console.log(user);
+                expect(user.nombre).toBe('Marta');
+                done();
             });
         });
+    });
+});

@@ -1,5 +1,6 @@
-let mongoose = require('mongoose');
-let Bicicleta = require('../../database/models/Bicicleta');
+const mongoose = require('mongoose');
+const Bicicleta = require('../../database/models/Bicicleta');
+const server = require('../../bin/www');
 
 describe('Testing Bicicletas', function() {
     beforeEach(function(done) {

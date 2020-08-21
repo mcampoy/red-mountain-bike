@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-let Bicicleta = require('../../database/models/Bicicleta');
-let Usuario = require('../../database/models/Usuario');
-let Reserva = require('../../database/models/Reserva');
-let server = require('../../bin/www');
+const Bicicleta = require('../../database/models/Bicicleta');
+const Usuario = require('../../database/models/Usuario');
+const Reserva = require('../../database/models/Reserva');
+const server = require('../../bin/www');
 
 describe('Testing Usuarios', function() {
     beforeEach(function(done) {
@@ -42,7 +42,7 @@ describe('Testing Usuarios', function() {
             mañana.setDate(hoy.getDate()+1);
             usuario.reservar(bicicleta.id, hoy, mañana, function(errr, reserva){
                 Reserva.find({}).populate('bicicleta').populate('usuario').exec(function(err, reservas){
-                console.log(reservas[0]);
+                // console.log(reservas[0]);
                 expect(reservas.length).toBe(1);
                 expect(reservas[0].diasDeReserva()).toBe(2);
                 expect(reservas[0].bicicleta.code).toBe(1);
