@@ -27,8 +27,8 @@ const bicicletaController = {
                  res.status(200).json({'ok':true, mensaje})
             })
             } else {
-                let fail = `No existe una bicicleta con el código: ${req.body.code}`
-                res.status(400).json({'ok': false, fail})
+                let mensaje = `No existe una bicicleta con el código: ${req.body.code}`
+                res.status(404).json({'ok': false, mensaje})
             }
         })
     },

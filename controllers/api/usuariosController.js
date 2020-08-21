@@ -18,6 +18,32 @@ const usuarioController = {
         });
     },
 
+    delete: (req, res) => {
+        Usuario.findByName(req.body.nombre, function(err, user){
+            if(user){
+            Usuario.removeByName(req.body.nombre, function(err, user){
+                let mensaje = `Se elmiminó correctamente el usuario con el nombre: ${req.body.nombre}`
+                 res.status(200).json({'ok':true, mensaje})
+            })
+            } else {
+                let fail = `No existe un usuario con el nombre: ${req.body.code}`
+                res.status(400).json({'ok': false, fail})
+            }
+        })
+    },
+
+    // Teniendo un solo atributo no se puede actualizar su información
+    // update: (req, res) => {
+    //     Usuario.findByName(req.body.nombre, function(err, user){
+
+    //           user.nombre = req.body.nombre
+
+    //          user.save(function(err){
+    //             res.status(200).json( {usuario: user } )
+    //         })
+    //     })
+    // },
+
     usuario_reservar: function (req, res) {
         Usuario.findById(req.body.id, function(err, usuario){
             console.log(usuario);

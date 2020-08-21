@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 let Bicicleta = require('../../database/models/Bicicleta');
 let Usuario = require('../../database/models/Usuario');
 let Reserva = require('../../database/models/Reserva');
+let server = require('../../bin/www');
 
 describe('Testing Usuarios', function() {
     beforeEach(function(done) {
@@ -28,7 +29,6 @@ describe('Testing Usuarios', function() {
             });
         });
     });
-
 
     describe('Cuando el usuario hace una reserva', function(){
         it('Debe existir una reserva', (done) => {

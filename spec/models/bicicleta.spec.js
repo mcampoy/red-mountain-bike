@@ -75,5 +75,5 @@ describe('Testing Bicicletas', function() {
                 })
             })
         })
-        });
+    });
 });
