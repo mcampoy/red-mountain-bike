@@ -4,7 +4,8 @@ const Bicicleta = require('../../database/models/Bicicleta');
 const bicicletaController = {
 
     index: function (req, res){
-        Bicicleta.find({}, function(err, bicicletas){
+
+        Bicicleta.allBicis(function(err, bicicletas){
             res.status(200).json({'Cantidad de bicicletas': bicicletas.length, bicicletas: bicicletas})
         })
     },
@@ -12,11 +13,16 @@ const bicicletaController = {
     create: (req, res) => {
 
         let ubicacion = [req.body.lat, req.body.lng];
-        let bicicleta = new Bicicleta({code: req.body.code, color: req.body.color, modelo: req.body.modelo, ubicacion: ubicacion});
-        bicicleta.save(function(err){
-            res.status(200).json({bicicleta})
-        });
-
+        let bicicleta = ({code: Number(req.body.code), color: req.body.color, modelo: req.body.modelo, ubicacion: ubicacion});
+        Bicicleta.add(bicicleta, (function(err){
+            if(bicicleta){
+                res.status(200).json({'ok': true, bicicleta})
+            } else {
+                let mensaje = 'No se pudo guardar la bicicleta'
+                res.status(404).json({'ok': false, mensaje})
+            }
+        }));
+            
       },
 
     delete: (req, res) => {
@@ -41,7 +47,7 @@ const bicicletaController = {
                bici.modelo = req.body.modelo;
 
              bici.save(function(err){
-                res.status(200).json( { bicileta: bici } )
+                res.status(200).json( { bicicleta: bici } )
             })
         })
     },
