@@ -1,13 +1,20 @@
 const mongoose = require('mongoose');
-const Reserva = require('./Reserva')
-const Schema = mongoose.Schema;
+const uniqueValidator = require('mongoose-unique-validator');
+const Reserva = require('./Reserva');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const saltRound = 10;
+
+const Token = require('./Token');
+const mailer = require('../../mailer/mailer');
+
+let Schema = mongoose.Schema;
 
 const validateEmail = function (email) {
     const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     return re.test(email);
 };
+
 
 let usuarioSchema = new Schema({
     nombre: {
@@ -20,6 +27,7 @@ let usuarioSchema = new Schema({
         trim: true,
         required: [true, 'El email es obligatorio'],
         lowercase: true,
+        unique: true,
         validate: [validateEmail, 'Por favor ingresar un email válido'],
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/]
     },
@@ -35,7 +43,7 @@ let usuarioSchema = new Schema({
     }
 });
 
-// usuarioSchema.plugin(uniqueValidator, { message: 'El {PATH} ya existe con otro usuario'});
+usuarioSchema.plugin(uniqueValidator, {message: 'El {PATH} ya existe con otro usuario'});
 
 usuarioSchema.pre('save', function(next){
     if(this.isModified('password')){
@@ -49,10 +57,10 @@ usuarioSchema.methods.validPassword = function(password){
 };
 
 
-usuarioSchema.methods.reservar = function(biciID, desde, hasta, cb){
+usuarioSchema.methods.reservar = function(biciId, desde, hasta, cb){
     let reserva = new Reserva({
         usuario: this._id,
-        bicicleta: biciID,
+        bicicleta: biciId,
         desde: desde,
         hasta: hasta
     })
@@ -75,6 +83,46 @@ usuarioSchema.statics.findByName = function(name, cb) {
 usuarioSchema.statics.removeByName = function(name, cb) {
     return this.deleteOne({nombre: name}, cb);
 }
+
+
+// Mail de bienvenida y autenticación de cuenta de usuario
+
+usuarioSchema.methods.enviarEmailBienvenida = function(cb) {
+    const token = new Token({_userId: this.id, token: crypto.randomBytes(16).toString('hex')});
+    const emailDestination = this.email;
+
+    console.log('token: ' + token);
+    console.log('email destination: ' + emailDestination);
+
+    // Persistitmos el Token
+    token.save(function(err) {
+        if(err) {
+            return console.log(err.message);
+        }
+
+        const validationDir = `http://localhost:3000/token/confirmation/${token.token}`
+
+        const mailOptions = {
+            from: 'no-reply@redbicicletas.com',
+            to: emailDestination,
+            subject: 'Verificación de cuenta',
+            text: '¡Te damos la bienvenida a Red bicicletas de montaña!, \n\n' + 'Por favor, para verificar tu cuenta hacé click en el siguiente enlace: \n' + validationDir
+        }
+
+        console.log( '-------------------------------------------' + '\n')
+        console.log( 'Pueden validar la cuenta desde aquí: ' + validationDir)
+        console.log( '\n' + '-------------------------------------------' + '\n')
+        console.log(mailOptions)
+        
+        mailer.sendMail(mailOptions, function(err) {
+            if(err) { 
+                return console.log(err.message); 
+            } else {
+                console.log('Se ha enviado un correo electrónico de bienvenida a ' + emailDestination + '.');
+            }
+        });
+    });
+};
 
 
 module.exports = mongoose.model('Usuario', usuarioSchema);
