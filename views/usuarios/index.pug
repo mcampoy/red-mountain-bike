@@ -3,7 +3,9 @@ extends ../layout
 block content
 
     div.container
-        a.btn.btn-success(href='/usuarios/create') Nuevo Usuario
+        br
+        a(href='/' class="btn btn-dark" style="padding: 1%") Home
+        br
 
         br
         br
@@ -26,9 +28,14 @@ block content
                 td= usuario.email
                 td= usuario.verificado ? 'SI' : 'NO'
                 td
-                    a.btn(href= '/usuarios/' + usuario.id + '/update') Editar
+                    a.btn(href= '/usuarios/' + usuario.id + '/update' class='btn btn-dark') Editar
                 td
                     form.inline(method='post' action='/usuarios/' + usuario.id + '/delete')
                         input(type='hidden' name='id' value= usuario.id)
                         button.link-button.btn-danger(type='submit' name='submit_param' value='submit_value' class='btn')
                             = 'Eliminar'
+                
+        br
+        br
+        br    
+        a.btn.btn-success(href='/usuarios/create') Nuevo Usuario

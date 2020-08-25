@@ -56,7 +56,6 @@ usuarioSchema.methods.validPassword = function(password){
     return bcrypt.compareSync(password, this.password);
 };
 
-
 usuarioSchema.methods.reservar = function(biciId, desde, hasta, cb){
     let reserva = new Reserva({
         usuario: this._id,
@@ -112,16 +111,47 @@ usuarioSchema.methods.enviarEmailBienvenida = function(cb) {
         console.log( '-------------------------------------------' + '\n')
         console.log( 'Pueden validar la cuenta desde aquí: ' + validationDir)
         console.log( '\n' + '-------------------------------------------' + '\n')
-        console.log(mailOptions)
+        // console.log(mailOptions)
         
         mailer.sendMail(mailOptions, function(err) {
-            if(err) { 
-                return console.log(err.message); 
-            } else {
-                console.log('Se ha enviado un correo electrónico de bienvenida a ' + emailDestination + '.');
-            }
+             // if(err) { return console.log(err.message); }
+
+             console.log('Se ha enviado un correo electrónico de bienvenida a ' + emailDestination + '.');
         });
     });
+};
+
+usuarioSchema.methods.resetPassword = function(cb) {
+    const token = new Token({_userId: this._id,token: crypto.randomBytes(16).toString('hex')});
+    const emailDestination = this.email;
+
+    console.log('token => ' + token);
+    console.log('token => ' + emailDestination);
+
+    token.save(function( err ){
+        if( err ) {
+            return console.log(err.message);
+        }
+        
+        const restablecerDir = `http://localhost:3000/resetPassword/${token.token}`
+
+        const mailOptions = {
+            from: 'no-reply@redbicicleta.com',
+            to: emailDestination,
+            subject: 'Reestablecer password',
+            text: 'Hola, \n\n'+' para reestablecer su password haga click en este enlace: \n' + restablecerDir
+        }
+
+        console.log( '-------------------------------------------' + '\n')
+        console.log( 'Pueden validar la cuenta desde aquí: ' + restablecerDir)
+        console.log( '\n' + '-------------------------------------------' + '\n')
+
+        mailer.sendMail(mailOptions, ( err )=> {
+            // if(err) { return console.log(err.message); }
+            console.log('Se ha enviado un correo electrónico de bienvenida a ' + emailDestination + '.');
+        });
+    });
+    
 };
 
 
