@@ -7,10 +7,12 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 L.marker([-32.985276,-68.8805794]).addTo(map)
     .bindPopup('Punto de partida de la excursión.')
     .openPopup();
+    
 
 $.ajax({
     dataTypes: "json",
     url: 'api/bicicletas/map',
+    'x-access-token': eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNDRlZDBlNDU3N2YwNDA4Y2FlZjIxNyIsImlhdCI6MTU5ODM3MzA4OSwiZXhwIjoxNTk4OTc3ODg5fQ.OjOaMkGgHgVlHKEyl03qz99KoQC4XpHwdyYhkbxqyFE,
     success: (result) => {
         console.log(result);
         result.bicicletas.forEach(bici => {

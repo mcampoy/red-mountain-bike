@@ -22,7 +22,6 @@ const bicicletaController = {
                 res.status(404).json({'ok': false, mensaje})
             }
         }));
-            
       },
 
     delete: (req, res) => {

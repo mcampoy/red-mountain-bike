@@ -2,9 +2,10 @@ const Usuario = require('../database/models/Usuario');
 const Token = require('../database/models/Token');
 
 module.exports = {
+
     confirmation: function(req, res, next) {
 
-        Token.findOne({token: req.params.token}, function (err, token) {
+        Token.findOne({token: req.params.token}, function(err, token) {
 
             if(!token) return res.status(400).send({type: 'not-verified', msg: 'No encontramos un usuario con ese token. Quizá haya expirado. Por favor, solicítelo nuevamente.'});
 

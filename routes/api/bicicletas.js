@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const bicicletaAPIController = require('../../controllers/api/bicicletaController');
+const bicicletaAPIController = require('../../controllers/api/bicicletaControllerApi');
 
 router.get('/', bicicletaAPIController.index);
 router.post('/create', bicicletaAPIController.create);

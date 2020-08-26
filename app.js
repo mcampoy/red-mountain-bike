@@ -3,22 +3,32 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+
+// Passport
 const passport = require('./config/passport');
+
+// Session
 const session = require('express-session');
+
+// JsonWebToken
+const jwt = require('jsonwebtoken');
 
 var indexRouter = require('./routes/index');
 var usuariosRouter = require('./routes/usuarios');
+var authApiRouter = require('./routes/api/auth');
 var tokenRouter = require('./routes/token');
 var bicicletasRouter = require('./routes/bicicletas');
 var bicicletasAPIRouter = require('./routes/api/bicicletas');
 var usuariosAPIRouter = require('./routes/api/usuarios');
 
-var Usuario = require('./database/models/Usuario');
-var Token = require('./database/models/Token');
-
+const Usuario = require('./database/models/Usuario');
+const Token = require('./database/models/Token');
 const store = new session.MemoryStore;
 
 var app = express();
+
+app.set('secretKey','jwt_rdb_red!Bici-c?908050');
+
 app.use(session({
   cookie: { maxAge: 240 * 60 * 60 * 1000 },
   store: store,
@@ -44,8 +54,12 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+// Inicialización de passport
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Ubicación de documentos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Rutas del login, logout y forgotPassword
@@ -84,7 +98,7 @@ app.post('/forgotPassword', function(req,res,next){
     
 		usuario.resetPassword(function(err){
 		if(err) return next(err);
-		console.log('session/forgotSessionMessage');
+		console.log('session/forgotSessionMessage')
 		});
     
     	res.render('session/forgotPasswordMessage');
@@ -94,18 +108,21 @@ app.post('/forgotPassword', function(req,res,next){
 
 app.get('/resetPassword/:token', function(req, res, next){
   	Token.findOne({token: req.params.token}, function(err, token){
-		if(!token) return res.status(400).send({type:'not-verified',msg:'No existe usuario asociado al token. Verificá que tu token no haya expirado'});
+		if(!token) return res.status(400).send({
+			type:'not-verified', 
+			msg: 'No existe usuario asociado al token. Verificá que tu token no haya expirado'
+		});
 
 		Usuario.findById(token._userId, function(err, usuario){
 			if(err) return res.status(400).send({msg: 'No existe usuario asociado a ese token'});
-			res.render('session/resetPassword', {errors:{}, usuario: usuario});
+			res.render('session/resetPassword', {errors: {}, usuario: usuario});
 		});
-  	})    
+  	});
 });
 
 app.post('/resetPassword', function(req, res, next){
 	if(req.body.password != req.body.confirm_password){
-		res.render('session/resetPassword', {errors:{confirm_password:'Las contraseñas no coinciden'}});
+		res.render('session/resetPassword', {errors: {confirm_password: 'Las contraseñas no coinciden'}});
 		return;
 	}
 
@@ -113,7 +130,7 @@ app.post('/resetPassword', function(req, res, next){
 		usuario.password = req.body.password;
 		usuario.save(function(err){
 			if(err){
-				res.render('session/resetPassword',{errors:err.errors,usuario: new Usuario()});
+				res.render('session/resetPassword',{errors: err.errors, usuario: new Usuario()});
 			} else {
 				res.redirect('/login');
 			}
@@ -124,9 +141,10 @@ app.post('/resetPassword', function(req, res, next){
 
 app.use('/', indexRouter);
 app.use('/usuarios', usuariosRouter);
+app.use('/api/auth', authApiRouter);
 app.use('/token', tokenRouter);
 app.use('/bicicletas', loggedIn, bicicletasRouter);
-app.use('/api/bicicletas', bicicletasAPIRouter);
+app.use('/api/bicicletas', validarUsuario, bicicletasAPIRouter);
 app.use('/api/usuarios', usuariosAPIRouter);
 
 // catch 404 and forward to error handler
@@ -151,24 +169,24 @@ function loggedIn(req, res, next){
 	if(req.user){
     next();
 	} else {
-		console.info('Usuario no logueado');
+		console.log('Usuario no logueado');
 		res.redirect('/login');
-	}
+	};
+};
+
+function validarUsuario(req, res, next){
+	jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function(err, decoded){
+		if(err){
+			res.json({status: "Error", message: err.message, data: null});
+		} else {
+			req.body._userId = decoded.id;
+
+			console.log('jwt verify ' + decoded);
+
+			next();
+
+		}
+	});
 }
-
-// function validarUsuario(req, res, next){
-// 	jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'),function(err, decoded){
-// 		if(err){
-// 			res.json({status:"error",message:err.message, data:null});
-// 		} else {
-// 			req.body._userId = decoded.id;
-
-// 			console.log('jwt verify ' + decoded);
-
-// 			next();
-
-// 		}
-// 	});
-// }
 
 module.exports = app;
