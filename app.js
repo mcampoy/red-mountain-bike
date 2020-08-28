@@ -1,3 +1,4 @@
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -40,7 +41,10 @@ app.use(session({
 // Mongoose
 const mongoose = require('mongoose');
 
-const mongoDB = 'mongodb://localhost/red_bicicletas';
+// const mongoDB = 'mongodb://localhost/red_bicicletas';
+
+// const mongoDB = 'mongodb+srv://admin:hola2020@cluster0.5mkeu.mongodb.net/red_bicicletas?retryWrites=true&w=majority';
+const mongoDB = process.env.MONGO_URI;
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;

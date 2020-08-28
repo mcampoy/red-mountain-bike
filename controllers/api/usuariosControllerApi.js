@@ -11,10 +11,16 @@ const usuarioController = {
     },
 
     create: function(req, res) {
-        let usuario = new Usuario({nombre: req.body.nombre});
+        
+        Usuario.create({nombre: req.body.nombre, email: req.body.email, password: req.body.password},  function(err, nuevoUsuario) {
 
-        usuario.save(function(err){
-            res.status(200).json(usuario)
+            if(err) {
+                console.log(err);
+                res.status(400).json({'true': false});
+            }else{
+                nuevoUsuario.enviarEmailBienvenida();
+                res.status(200).json(nuevoUsuario)
+            }
         });
     },
 
