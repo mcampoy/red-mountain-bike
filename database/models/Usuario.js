@@ -149,32 +149,60 @@ usuarioSchema.methods.resetPassword = function(cb) {
     });
 };
 
+// usuarioSchema.statics.findOneOrCreateByGoogle = function findOneOrCreate(condition, callback) {
+//     const self = this;
+//     console.log(condition);
+//     self.findOne({
+//         $or: [
+//             {'googleId': condition.id}, {'email': condition.emails[0].value}
+//         ]}, (err, result) => {
+//             if(result) {
+//                 callback(err, result)
+//             } else {
+//                 console.log('-----------------------CONDITION-----------------------');
+//                 console.log(condition);
+//                 let values = {};
+//                 values.googleId = condition.id;
+//                 values.email = CONDITION.emails[0].value;
+//                 values.nombre = condition.displayName || 'Sin nombre';
+//                 values.verificado = true;
+//                 values.password = condition._json.etag;
+//                 console.log('-----------------------VALUES-----------------------');
+//                 console.log(values);
+//                 self.create(values, (err, result)=>{
+//                     if (error) {console.log(error);}
+//                     return callback(err, result)
+//                 })
+//             }
+//     })
+// };
+
 usuarioSchema.statics.findOneOrCreateByGoogle = function findOneOrCreate(condition, callback) {
     const self = this;
-    console.log(condition);
+    console.log('condition: ', condition)
     self.findOne({
-        $or: [
-            {'googleId': condition.id}, {'email': condition.emails[0].value}
+        $or:[
+            {'googleId': condition.id},{'email': condition.emails[0].value}
         ]}, (err, result) => {
-            if(result) {
-                callback(err, result)
-            } else {
-                console.log('-----------------------CONDITION-----------------------');
+            if (result) {
+                callback(err,result)
+            }else{
+                console.log('--------------- CONDITION -----------------');
                 console.log(condition);
                 let values = {};
                 values.googleId = condition.id;
-                values.email = CONDITION.emails[0].value;
-                values.nombre = condition.displayName || 'Sin nombre';
+                values.email = condition.emails[0].value;
+                values.nombre = condition.displayName || 'SIN NOMBRE';
                 values.verificado = true;
-                values.password = condition._json.etag;
-                console.log('-----------------------VALUES-----------------------');
+                values.password = crypto.randomBytes(16).toString('hex');
+                console.log('--------------- VALUES --------------------');
                 console.log(values);
-                self.create(values, (err, result)=>{
-                    if (error) {console.log(error);}
-                    return callback(err, result)
+                self.create(values, (err, result) => {
+                    if (err) { console.log(err);}
+                    return callback(err,result)
                 })
             }
-    })
+        })
 };
 
 

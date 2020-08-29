@@ -26,18 +26,32 @@ const Token = require('./database/models/Token');
 
 // const store = new session.MemoryStore;
 
+// let store;
+// if(process.env.NODE_ENV === 'development') {
+// 	store = new session.MemoryStore;
+// } else {
+// 	store = new MongoDBStore({
+// 		uri: process.env.MONGO_URI,
+// 		collection: 'sessions'
+// 	});
+// 	store.on('error', function(error) {
+// 		assert.ifError(error);
+// 		assert.ok(false)
+// 	});
+// }
+
 let store;
-if(process.env.NODE_ENV === 'development') {
-	store = new session.MemoryStore;
+if (process.env.NODE_ENV === 'development') {
+  store = new session.MemoryStore;
 } else {
-	store = new MongoDBStore({
-		uri: process.env.MONGO_URI,
-		collection: 'sessions'
-	});
-	store.on('error', function(error) {
-		assert.ifError(error);
-		assert.ok(false)
-	});
+  store = new MongoDBStore({
+    uri: process.env.MONGO_URI,
+    collection: 'sessions'
+  });
+  store.on('error', function(error) {
+    assert.ifError(error);
+    assert.ok(false);
+  });
 }
 
 var app = express();
