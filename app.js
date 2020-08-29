@@ -4,32 +4,44 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
 // Passport
 const passport = require('./config/passport');
-
 // Session
 const session = require('express-session');
-
+// mongoStore
+const MongoDBStore = require('connect-mongodb-session')(session);
 // JsonWebToken
 const jwt = require('jsonwebtoken');
 
 var indexRouter = require('./routes/index');
 var usuariosRouter = require('./routes/usuarios');
-var authApiRouter = require('./routes/api/auth');
 var tokenRouter = require('./routes/token');
 var bicicletasRouter = require('./routes/bicicletas');
-var bicicletasAPIRouter = require('./routes/api/bicicletas');
 var usuariosAPIRouter = require('./routes/api/usuarios');
+var bicicletasAPIRouter = require('./routes/api/bicicletas');
+var authAPIRouter = require('./routes/api/auth');
 
 const Usuario = require('./database/models/Usuario');
 const Token = require('./database/models/Token');
-const store = new session.MemoryStore;
+
+// const store = new session.MemoryStore;
+
+let store;
+if(process.env.NODE_ENV === 'development') {
+	store = new session.MemoryStore;
+} else {
+	store = new MongoDBStore({
+		uri: process.env.MONGO_URI,
+		collection: 'sessions'
+	});
+	store.on('error', function(error) {
+		assert.ifError(error);
+		assert.ok(false)
+	});
+}
 
 var app = express();
-
 app.set('secretKey','jwt_rdb_red!Bici-c?908050');
-
 app.use(session({
   cookie: { maxAge: 240 * 60 * 60 * 1000 },
   store: store,
@@ -40,6 +52,7 @@ app.use(session({
 
 // Mongoose
 const mongoose = require('mongoose');
+const { assert } = require('console');
 
 // const mongoDB = 'mongodb://localhost/red_bicicletas';
 
@@ -145,11 +158,11 @@ app.post('/resetPassword', function(req, res, next){
 
 app.use('/', indexRouter);
 app.use('/usuarios', usuariosRouter);
-app.use('/api/auth', authApiRouter);
 app.use('/token', tokenRouter);
 app.use('/bicicletas', loggedIn, bicicletasRouter);
 app.use('/api/bicicletas', validarUsuario, bicicletasAPIRouter);
 app.use('/api/usuarios', usuariosAPIRouter);
+app.use('/api/auth', authAPIRouter);
 
 // Políticas de privacidad
 app.use('/privacy-policy', function (req, res){
@@ -159,7 +172,18 @@ app.use('/privacy-policy', function (req, res){
 // Google OAuth
 app.use('/googlee9be53acbc5cdf42', function (req, res){
 	res.sendFile('public/googlee9be53acbc5cdf42.html')
-})
+});
+
+app.get('/auth/google',
+	passport.authenticate('google', { scope: [
+		'https//www.googleapis.com/auth/plus.login',
+		'https//www.googleapis.com/auth/plus.profile.emails.read' ] } ));
+
+app.get('/auth/google/callback', passport.authenticate('google', {
+	successRedirect: '/',
+	failureRedirect: '/error'
+	})
+);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
