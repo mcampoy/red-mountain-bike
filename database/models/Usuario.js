@@ -85,7 +85,6 @@ usuarioSchema.statics.removeByName = function(name, cb) {
     return this.deleteOne({nombre: name}, cb);
 }
 
-
 // Mail de bienvenida y autenticación de cuenta de usuario
 
 usuarioSchema.methods.enviarEmailBienvenida = function(cb) {

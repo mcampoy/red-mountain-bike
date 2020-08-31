@@ -112,14 +112,13 @@ app.post('/forgotPassword', function(req,res,next){
   	Usuario.findOne({email: req.body.email}, function(err, usuario){
     	console.log(usuario);
     	if(!usuario) return res.render('session/forgotPassword',{info: {message: 'No existe el email para usuario existente'}});
-    
+
 		usuario.resetPassword(function(err){
 		if(err) return next(err);
 		console.log('session/forgotSessionMessage')
 		});
-    
+
     	res.render('session/forgotPasswordMessage');
-  
   	});
 });
 
