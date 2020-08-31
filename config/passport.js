@@ -25,7 +25,7 @@ passport.use(new FacebookTokenStrategy({
             if (err) console.log('err' + err);
             return done(err, user);
         });
-    } catch(errr2) {
+    } catch(err2) {
         console.log(err2);
         return done(err2, null);
     }
