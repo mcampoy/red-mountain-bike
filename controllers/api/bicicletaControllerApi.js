@@ -3,25 +3,11 @@ const Bicicleta = require('../../database/models/Bicicleta');
 
 const bicicletaController = {
 
-    index: async (req, res) => {
+    index: function (req, res){
 
-        // Bicicleta.allBicis(function(err, bicicletas){
-        //     res.status(200).json({'Cantidad de bicicletas': bicicletas.length, bicicletas: bicicletas})
-        // })
-        let bicicletas = await Bicicleta.allBicis;
-        let results ={
-            meta:
-            {
-                status: 'ok'
-            },
-            body: {
-                'cantidad de bicicletas disponibles': bicicletas.length,
-                bicicletas: bicicletas
-            }
-        }
-
-        res.status(200).json({results})
-
+        Bicicleta.allBicis(function(err, bicicletas){
+            res.status(200).json({'Cantidad de bicicletas': bicicletas.length, bicicletas: bicicletas})
+        })
     },
 
     create: (req, res) => {
