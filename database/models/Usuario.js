@@ -168,7 +168,7 @@ usuarioSchema.statics.findOneOrCreateByGoogle = function findOneOrCreate(conditi
                 values.googleId = condition.id;
                 values.email = condition.emails[0].value;
                 values.nombre = condition.displayName || 'Sin nombre';
-                values.verificado = true;
+                values.verificado = condition.emails[1].value;
                 values.password = 123;
                 console.log('-----------------------VALUES-----------------------');
                 console.log(values);
