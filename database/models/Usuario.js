@@ -173,7 +173,7 @@ usuarioSchema.statics.findOneOrCreateByGoogle = function findOneOrCreate(conditi
                 console.log('-----------------------VALUES-----------------------');
                 console.log(values);
                 self.create(values, (err, result)=>{
-                    if (error) {console.log(error);}
+                    if (err) {console.log(err);}
                     return callback(err, result)
                 })
             }
