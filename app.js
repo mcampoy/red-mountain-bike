@@ -176,8 +176,7 @@ app.use('/googlee9be53acbc5cdf42', function (req, res){
 
 app.get('/auth/google',
   passport.authenticate('google', { scope: [
-    'https://www.googleapis.com/auth/plus.login',
-	'https://www.googleapis.com/auth/plus.profile.emails.read'
+	'openid', 'email', 'profile'
   ] })
 );
 
