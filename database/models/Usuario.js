@@ -169,7 +169,7 @@ usuarioSchema.statics.findOneOrCreateByGoogle = function findOneOrCreate(conditi
                 values.email = condition.emails[0].value;
                 values.nombre = condition.displayName || 'Sin nombre';
                 values.verificado = condition.emails[1].value;
-                values.password = crypto.randomBytes(16).toString('hex');
+                values.password = 123;
                 console.log('-----------------------VALUES-----------------------');
                 console.log(values);
                 self.create(values, (err, result)=>{
