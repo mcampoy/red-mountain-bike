@@ -10,15 +10,26 @@ L.marker([-32.985276,-68.8805794]).addTo(map)
     
 
 $.ajax({
-    dataTypes: "json",
-    url: 'api/bicicletas/map',
-    'x-access-token': eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNDRlZDBlNDU3N2YwNDA4Y2FlZjIxNyIsImlhdCI6MTU5ODM3MzA4OSwiZXhwIjoxNTk4OTc3ODg5fQ.OjOaMkGgHgVlHKEyl03qz99KoQC4XpHwdyYhkbxqyFE,
-    success: (result) => {
+    method: 'POST',
+    dataType: 'json',
+    url: 'api/auth/authenticate',
+    data: { email: 'matias@gmail.com', password: 'hola2020' },
+}).done(function( data ) {
+    console.log(data);
+
+    $.ajax({
+        dataType: 'json',
+        url: 'api/bicicletas/map',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("x-access-token", data.data.token);
+        }
+    }).done(function (result) {
         console.log(result);
+
         result.bicicletas.forEach(bici => {
             L.marker(bici.ubicacion).addTo(map)
             .bindPopup(`Bicicleta n° ${bici.id}`)
             .openPopup();
         });
-    }
-})
+    });
+});
